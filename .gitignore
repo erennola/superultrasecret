@@ -1,0 +1,17 @@
+## generic files
+*~
+*.lock
+*.DS_Store
+*.swp
+*.out
+
+# java
+*.class
+
+# intellij
+*.eml
+*.iml
+*.ipr
+*.iws
+.*.sw?
+.idea
