@@ -1,13 +1,15 @@
 package service;
 
 import dao.BrokerDao;
+import model.Data;
 
 public class BrokerService {
 
     private BrokerDao dao = new BrokerDao();
 
-    public BrokerDao.Data getBrokerData(String ticker) {
-        return dao.getTickerPrice(ticker);
-
+    public Data getBrokerData(String ticker) {
+        Data data = dao.getTickerPrice(ticker);
+        data.name = ticker;
+        return data;
     }
 }

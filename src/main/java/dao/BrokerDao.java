@@ -1,6 +1,7 @@
 package dao;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import model.Data;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -13,7 +14,7 @@ public class BrokerDao {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public Data getTickerPrice(String ticker) {
-        String url = "http://www.google.com/search?q=httpClient";
+        String url = "http://localhost:8080/stocks/" + ticker;
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(url);
 
@@ -25,12 +26,6 @@ public class BrokerDao {
         }
 
         return null;
-    }
-
-    public static class Data {
-        public String nombre;
-        public String ticket;
-        public String cotizacion;
     }
 
 }
