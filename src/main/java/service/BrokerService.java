@@ -19,7 +19,7 @@ public class BrokerService {
         InputStream input = null;
 
         try {
-            input = BrokerService.class.getClassLoader().getResourceAsStream("config.properties");
+            input = BrokerService.class.getClassLoader().getResourceAsStream("stock-inicial.properties");
 
             if (input != null) {
                 prop.load(input);
