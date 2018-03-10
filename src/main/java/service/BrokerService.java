@@ -12,14 +12,16 @@ import java.util.Properties;
 
 public class BrokerService {
 
-    private static Map<String, String> tickers = new HashMap<>();
+    private final Map<String, String> tickerNames;
 
-    static {
+    public BrokerService() {
+        tickerNames = new HashMap<>();
+
         Properties prop = new Properties();
         InputStream input = null;
 
         try {
-            input = BrokerService.class.getClassLoader().getResourceAsStream("stock-inicial.properties");
+            input = BrokerService.class.getClassLoader().getResourceAsStream("nombres.properties");
 
             if (input != null) {
                 prop.load(input);
@@ -28,7 +30,7 @@ public class BrokerService {
                 while (e.hasMoreElements()) {
                     String key = (String) e.nextElement();
                     String value = prop.getProperty(key);
-                    tickers.put(key, value);
+                    tickerNames.put(key, value);
                 }
             }
         } catch (IOException ex) {
@@ -48,7 +50,7 @@ public class BrokerService {
 
     public Data getBrokerData(String ticker) {
         DataDto dataDto = dao.getTickerPrice(ticker);
-        String name = tickers.get(ticker);
+        String name = tickerNames.get(ticker);
         return new Data(name, dataDto.getTicker(), dataDto.getValue());
     }
 

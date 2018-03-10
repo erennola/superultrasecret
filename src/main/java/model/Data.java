@@ -14,6 +14,7 @@ public class Data {
         this.value = value;
     }
 
+    public String toString() { return "lalala"; }
 
     public String getName() {
         return name;
