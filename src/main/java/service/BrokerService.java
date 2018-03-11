@@ -23,6 +23,7 @@ public class BrokerService {
         try {
             input = BrokerService.class.getClassLoader().getResourceAsStream("nombres.properties");
 
+            System.out.println(input);
             if (input != null) {
                 prop.load(input);
 
@@ -51,6 +52,7 @@ public class BrokerService {
     public Data getBrokerData(String ticker) {
         DataDto dataDto = dao.getTickerPrice(ticker);
         String name = tickerNames.get(ticker);
+        System.out.println("el name " + name);
         return new Data(name, dataDto.getTicker(), dataDto.getValue());
     }
 
