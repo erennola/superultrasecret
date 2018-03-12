@@ -15,3 +15,5 @@
 *.iws
 .*.sw?
 .idea
+
+/target
