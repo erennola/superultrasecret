@@ -9,15 +9,18 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.stream.Collectors;
 
 public class BrokerService {
 
     private final Map<String, String> tickerNames;
-    private final Map<String, String> stockQuantity;
+    private final Map<String, Integer> stockQuantity;
 
     public BrokerService() {
         tickerNames = readPropertiesFile("nombres.properties");
-        stockQuantity = readPropertiesFile("stock-inicial.properties");
+        stockQuantity = readPropertiesFile("stock-inicial.properties")
+                        .entrySet().stream()
+                        .collect(Collectors.toMap(e -> e.getKey(), e -> Integer.valueOf(e.getValue())));
     }
 
 
@@ -26,7 +29,6 @@ public class BrokerService {
     public Data getBrokerData(String ticker) {
         DataDto dataDto = dao.getTickerPrice(ticker);
         String name = tickerNames.get(ticker);
-        System.out.println("el name " + name);
         return new Data(name, dataDto.getTicker(), dataDto.getValue());
     }
 
