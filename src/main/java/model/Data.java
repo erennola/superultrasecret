@@ -4,11 +4,11 @@ public class Data {
 
     private String name;
     private String ticker;
-    private String value;
+    private Integer value;
 
     public Data() {}
 
-    public Data(String name, String ticker, String value) {
+    public Data(String name, String ticker, Integer value) {
         this.name = name;
         this.ticker = ticker;
         this.value = value;
@@ -32,11 +32,11 @@ public class Data {
         this.ticker = ticker;
     }
 
-    public String getValue() {
+    public Integer getValue() {
         return value;
     }
 
-    public void setValue(String value) {
+    public void setValue(Integer value) {
         this.value = value;
     }
 
