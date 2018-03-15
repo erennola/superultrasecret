@@ -35,8 +35,9 @@ public class BrokerService {
                     Double stockPrice = getStockPrice(e.getKey());
                     Integer quantityToBuy = (int) (e.getValue() / stockPrice)  ;
                     Double remaining = e.getValue() % stockPrice;
+                    Integer balance = stockQuantity.get(e.getKey()) - quantityToBuy;
 
-                    if (stockQuantity.get(e.getKey()) - quantityToBuy < 0) {
+                    if (balance < 0) {
                         throw new RuntimeException("There is no enough stock for " + e.getKey());
                     }
                     return quantityToBuy;
