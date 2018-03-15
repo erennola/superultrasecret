@@ -24,16 +24,17 @@ public class BrokerService {
 
     public Data getBrokerData(String ticker) {
         String name = tickerNames.get(ticker);
-        return new Data(name, ticker, getStockPrice(ticker));
+        Double price = getStockPrice(ticker);
+        return new Data(name, ticker, price);
     }
 
     public boolean buyStock(Map<String, Integer> transactionRequest) {
         Map<String, Integer> quantitiesToBuy = transactionRequest.entrySet().stream().collect(Collectors.toMap(
                 Map.Entry::getKey,
                 e -> {
-                    Integer stockPrice = getStockPrice(e.getKey());
-                    Integer quantityToBuy = e.getValue() / stockPrice;
-                    Integer remaining = e.getValue() % stockPrice;
+                    Double stockPrice = getStockPrice(e.getKey());
+                    Integer quantityToBuy = (int) (e.getValue() / stockPrice)  ;
+                    Double remaining = e.getValue() % stockPrice;
 
                     if (stockQuantity.get(e.getKey()) - quantityToBuy < 0) {
                         throw new RuntimeException("There is no enough stock for " + e.getKey());
@@ -49,13 +50,9 @@ public class BrokerService {
         return true;
     }
 
-    private Map<String, Integer> getStockPrices(Set<String> tickers) {
-        return tickers.parallelStream()
-               .collect(Collectors.toMap(e -> e, e -> getStockPrice(e)));
-    }
-
-    private Integer getStockPrice(String ticker) {
-        return Integer.valueOf(dao.getTickerPrice(ticker).getValue());
+    private Double getStockPrice(String ticker) {
+        String value = dao.getTickerPrice(ticker).getValue();
+        return Double.valueOf(value);
     }
 
     private Map<String, String> readPropertiesFile(String fileName) {
