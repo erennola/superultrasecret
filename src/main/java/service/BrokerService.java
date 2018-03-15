@@ -1,7 +1,6 @@
 package service;
 
 import dao.BrokerDao;
-import dao.DataDto;
 import model.Data;
 
 import java.io.*;
@@ -28,21 +27,26 @@ public class BrokerService {
         return new Data(name, ticker, getStockPrice(ticker));
     }
 
-    public void buyStock(Map<String, Integer> transactionRequest) {
-        Map<String, Integer> stockPrices = getStockPrices(transactionRequest.keySet());
-        Map<String, Integer> quantityToBuy = stockPrices.entrySet().stream()
-                                             .collect(Collectors.toMap(Map.Entry::getKey,
-                                                                       e -> transactionRequest.get(e.getKey()) / e.getValue()));
+    public boolean buyStock(Map<String, Integer> transactionRequest) {
+        Map<String, Integer> quantitiesToBuy = transactionRequest.entrySet().stream().collect(Collectors.toMap(
+                Map.Entry::getKey,
+                e -> {
+                    Integer stockPrice = getStockPrice(e.getKey());
+                    Integer quantityToBuy = e.getValue() / stockPrice;
+                    Integer remaining = e.getValue() % stockPrice;
 
-        for (Map.Entry<String, Integer> e : quantityToBuy.entrySet()) {
-            if (stockQuantity.get(e.getKey()) < e.getValue()) {
-                throw new RuntimeException("There is no enough stock for " + e.getKey());
-            }
-        }
+                    if (stockQuantity.get(e.getKey()) - quantityToBuy < 0) {
+                        throw new RuntimeException("There is no enough stock for " + e.getKey());
+                    }
+                    return quantityToBuy;
+                }
+        ));
 
-        for (Map.Entry<String, Integer> e : quantityToBuy.entrySet()) {
+        for (Map.Entry<String, Integer> e : quantitiesToBuy.entrySet()) {
             stockQuantity.put(e.getKey(), stockQuantity.get(e.getKey()) - e.getValue());
         }
+
+        return true;
     }
 
     private Map<String, Integer> getStockPrices(Set<String> tickers) {

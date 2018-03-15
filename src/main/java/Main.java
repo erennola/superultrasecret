@@ -24,7 +24,7 @@ public class Main {
 
         post("ticker", (req, res) -> {
             Map<String, Integer> transactionRequest = mapper.readValue(req.body(), Properties.class);
-            service.buyStock(transactionRequest);
+            return service.buyStock(transactionRequest);
         }, json());
     }
 
