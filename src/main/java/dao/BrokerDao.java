@@ -6,6 +6,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClientBuilder;
 
+import exceptions.BrokerException;
+
 import java.io.IOException;
 
 public class BrokerDao {
@@ -21,10 +23,9 @@ public class BrokerDao {
             HttpResponse response = client.execute(request);
             return mapper.readValue(response.getEntity().getContent(), DataDto.class);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new BrokerException("Stocks server can't be reached");
         }
 
-        return null;
     }
 
 }

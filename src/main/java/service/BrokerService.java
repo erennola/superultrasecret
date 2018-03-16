@@ -2,6 +2,7 @@ package service;
 
 import dao.BrokerDao;
 import model.Data;
+import exceptions.BrokerException;
 
 import java.io.*;
 import java.util.*;
@@ -28,7 +29,8 @@ public class BrokerService {
         return new Data(name, ticker, price);
     }
 
-    public boolean buyStock(Map<String, Integer> transactionRequest) {
+    public Map<String, Integer> buyStock(Map<String, Integer> transactionRequest) {
+        Map<String, Double> remainingMoney = new HashMap<String, Double>();;
         Map<String, Integer> quantitiesToBuy = transactionRequest.entrySet().stream().collect(Collectors.toMap(
                 Map.Entry::getKey,
                 e -> {
@@ -36,9 +38,9 @@ public class BrokerService {
                     Integer quantityToBuy = (int) (e.getValue() / stockPrice)  ;
                     Double remaining = e.getValue() % stockPrice;
                     Integer balance = stockQuantity.get(e.getKey()) - quantityToBuy;
-
+                    remainingMoney.put(e.getKey(), remaining);
                     if (balance < 0) {
-                        throw new RuntimeException("There is no enough stock for " + e.getKey());
+                        throw new BrokerException("There is no enough stock for " + e.getKey());
                     }
                     return quantityToBuy;
                 }
@@ -48,7 +50,7 @@ public class BrokerService {
             stockQuantity.put(e.getKey(), stockQuantity.get(e.getKey()) - e.getValue());
         }
 
-        return true;
+        return quantitiesToBuy;
     }
 
     private Double getStockPrice(String ticker) {
